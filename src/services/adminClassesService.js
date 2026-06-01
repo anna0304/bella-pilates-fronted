@@ -31,3 +31,8 @@ export async function deactivateAdminClass(classId) {
   const response = await api.patch(`/admin/classes/${classId}/deactivate`);
   return response.data;
 }
+
+export async function activateAdminClass(classId) {
+  const response = await api.patch(`/admin/classes/${classId}/activate`);
+  return response.data;
+}

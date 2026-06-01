@@ -11,6 +11,7 @@ import { ViewClassModal } from "./ViewClassModal";
 import { EditClassModal } from "./EditClassModal";
 
 import {
+  activateAdminClass,
   deactivateAdminClass,
   getAdminClasses,
   updateAdminClass,
@@ -115,7 +116,10 @@ export function AdminClassesPage() {
       ]);
 
       const data =
-        classesResponse.data || classesResponse.classes || classesResponse || [];
+        classesResponse.data ||
+        classesResponse.classes ||
+        classesResponse ||
+        [];
 
       const usersData =
         usersResponse.data || usersResponse.users || usersResponse || [];
@@ -156,12 +160,7 @@ export function AdminClassesPage() {
     ];
   }, [classes]);
 
-  const statusOptions = useMemo(() => {
-    return [
-      "Todos",
-      ...new Set(classes.map((item) => item.status).filter(Boolean)),
-    ];
-  }, [classes]);
+  const statusOptions = ["Todos", "Activa", "Inactiva"];
 
   const filteredClasses = useMemo(() => {
     return classes.filter((item) => {
@@ -227,11 +226,12 @@ export function AdminClassesPage() {
     try {
       if (classItem.status === "Activa") {
         await deactivateAdminClass(classItem.id);
+        showToast("Clase desactivada correctamente");
       } else {
-        await updateAdminClass(classItem.id, buildPayload(classItem, true));
+        await activateAdminClass(classItem.id);
+        showToast("Clase activada correctamente");
       }
 
-      showToast("Estado de la clase actualizado");
       await loadClasses();
     } catch (error) {
       console.error(error);
